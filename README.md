@@ -1,4 +1,4 @@
-# Adivinanzas
+# Adivina la imagen
 
 ## Project setup
 ```
