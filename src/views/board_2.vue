@@ -35,10 +35,16 @@
               </v-col>
               <v-col>
                 <div>
-                  {{ tiempo }}
+                  {{ crono }}
                 </div>
                 <div>
                   TIEMPO
+                  <v-btn color="orange" @click="start">
+                    Iniciar tiempo
+                  </v-btn>
+                  <v-btn color="orange" @click="stop">
+                    detener tiempo
+                  </v-btn>
                 </div>
               </v-col>
             </v-row>
@@ -51,16 +57,13 @@
                     id="img"
                     class="blur6"
                     height="400px"
-                    width="578"
+                    width="600"
                     src="https://t1.ea.ltmcdn.com/es/images/7/0/0/buhos_24007_1_600.jpg"
                   >
                   </v-img>
                   <v-card-text class="text--primary">
                     <div>Tu respuesta:</div>
-                    <v-text-field
-                      :rules="rules"
-                      @click="actualizar"
-                    ></v-text-field>
+                    <v-text-field :rules="rules"></v-text-field>
                   </v-card-text>
 
                   <v-card-actions>
@@ -76,7 +79,7 @@
               <v-sheet class="mx-auto" elevation="3" width="650">
                 <v-row align="center" justify="center">
                   <div>
-                    <v-btn color="orange" type="submit" @click="verPista">
+                    <v-btn color="orange" type="submit">
                       Pedir pista
                     </v-btn>
                   </div>
@@ -169,11 +172,9 @@
 </template>
 <script>
 export default {
-
   data: () => ({
     b: 6,
-    item: 1,
-    tiempo: 0,
+    //item: 1,
     rules: [
       /*
       value => !!value || 'Required.',
@@ -201,15 +202,30 @@ export default {
         pista: "Tiene plumas que parecen orejas",
       },
       {
-        pista: "Puede girar la cabeza en 270°",
+        pista: "Puede girar su cabeza en 270°",
       },
       {
-        pista: "Es un ave rapaz de hábitos nocturnos",
+        pista: "Posee hábitos nocturnos",
       },
       {
         pista: "Muchos la confunden con la lechuza",
       },
     ],
+    //
+    //pantalla: document.getElementById("screen"),
+    isMarch: false,
+    acumularTime: 0,
+    crono: "00 : 00",
+
+    timeInicial: 0,
+    control: 0,
+    timeActual: 0,
+    acumularTime2: 0,
+
+    cc: 0,
+    ss: 0,
+    mm: 0,
+    hh: 0,
   }),
   methods: {
     verPista() {
@@ -226,12 +242,73 @@ export default {
         this.intentos++;
       }
     },
-    aumentar() {
-      this.tiempo++;
+    //
+
+    start() {
+      if (this.isMarch == false) {
+        this.timeInicial = new Date();
+        this.control = setInterval(() => {
+          this.timeActual = new Date();
+          this.acumularTime = this.timeActual - this.timeInicial;
+          this.acumularTime2 = new Date();
+          this.acumularTime2.setTime(this.acumularTime);
+          //this.cc = Math.round(this.acumularTime2.getMilliseconds() / 10);
+          this.ss = this.acumularTime2.getSeconds();
+          this.mm = this.acumularTime2.getMinutes();
+          //this.hh = this.acumularTime2.getHours();
+          /*
+          if (this.cc < 10) {
+            this.cc = "0" + this.cc;
+          }
+          */
+          if (this.ss < 10) {
+            this.ss = "0" + this.ss;
+          }
+          if (this.mm < 10) {
+            this.mm = "0" + this.mm;
+          }
+          /*
+          if (this.hh < 10) {
+            this.hh = "0" + this.hh;
+          }
+          */
+          //this.crono = this.hh + " : " + this.mm + " : " + this.ss + " : " + this.cc;
+          this.crono = this.mm + " : " + this.ss;
+        }, 10);
+        this.isMarch = true;
+      }
     },
-    actualizar() {
-      this.aumentar();
-      window.requestAnimtionFrame(this.actualizar);
+    /*
+    cronometro() {
+      this.timeActual = new Date();
+      this.acumularTime = this.timeActual - this.timeInicial;
+      this.acumularTime2 = new Date();
+      this.acumularTime2.setTime(this.acumularTime);
+      this.cc = Math.round(this.acumularTime2.getMilliseconds() / 10);
+      this.ss = this.acumularTime2.getSeconds();
+      this.mm = this.acumularTime2.getMinutes();
+      this.hh = this.acumularTime2.getHours() - 18;
+      if (this.cc < 10) {
+        this.cc = "0" + this.cc;
+      }
+      if (this.ss < 10) {
+        this.ss = "0" + this.ss;
+      }
+      if (this.mm < 10) {
+        this.mm = "0" + this.mm;
+      }
+      if (this.hh < 10) {
+        this.hh = "0" + this.hh;
+      }
+      this.crono =
+        this.hh + " : " + this.mm + " : " + this.ss + " : " + this.cc;
+    },
+    */
+    stop() {
+      if (this.isMarch == true) {
+        clearInterval(this.control);
+        this.isMarch = false;
+      }
     },
   },
 };
