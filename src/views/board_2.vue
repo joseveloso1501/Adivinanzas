@@ -48,7 +48,8 @@
               <v-row justify="center">
                 <v-card class="mx-auto">
                   <v-img
-                    class="blur"
+                    id="img"
+                    class="blur6"
                     height="400px"
                     width="578"
                     src="https://t1.ea.ltmcdn.com/es/images/7/0/0/buhos_24007_1_600.jpg"
@@ -56,7 +57,10 @@
                   </v-img>
                   <v-card-text class="text--primary">
                     <div>Tu respuesta:</div>
-                    <v-text-field :rules="rules" @click="actualizar"></v-text-field>
+                    <v-text-field
+                      :rules="rules"
+                      @click="actualizar"
+                    ></v-text-field>
                   </v-card-text>
 
                   <v-card-actions>
@@ -89,19 +93,20 @@
                     <v-slide-item
                       v-for="(item, n) in items"
                       :key="n"
-                      
+                      v-slot:default="{ active, toggle }"
                     >
                       <v-card
                         :color="active ? 'primary' : 'grey lighten-1'"
                         class="ma-4"
                         height="150"
                         width="150"
-                        @click="verPista(n)"
+                        @click="toggle"
                       >
                         <v-row
                           class="fill-height"
                           align="center"
                           justify="center"
+                          @click="verPista"
                         >
                           <v-scale-transition>
                             <v-icon
@@ -164,19 +169,11 @@
 </template>
 <script>
 export default {
-  //el: "#app",
+
   data: () => ({
-    itemBlur: [
-      { b: "0px" },
-      { b: "5px" },
-      { b: "10px" },
-      { b: "15px" },
-      { b: "20px" },
-    ],
+    b: 6,
     item: 1,
     tiempo: 0,
-    active: false,
-
     rules: [
       /*
       value => !!value || 'Required.',
@@ -187,7 +184,6 @@ export default {
       },
       */
     ],
-
     model: null,
     multiple: true,
     showArrows: true,
@@ -199,30 +195,36 @@ export default {
     intentos: 0,
     items: [
       {
-        pista: "Es de hábitos nocturnos",
+        pista: "Tiene ojos muy grandes",
+      },
+      {
+        pista: "Tiene plumas que parecen orejas",
       },
       {
         pista: "Puede girar la cabeza en 270°",
       },
       {
-        pista: "Tiene ojos muy grandes",
+        pista: "Es un ave rapaz de hábitos nocturnos",
       },
       {
-        pista: "Es un ave rapaz",
-      },
-      {
-        pista: "Tiene plumas que parecen orejas",
+        pista: "Muchos la confunden con la lechuza",
       },
     ],
   }),
   methods: {
     verPista() {
-      this.active = true;
-      this.puntaje -= 10;
-      
+      if (this.b > 1) {
+        this.b--;
+        document.getElementById("img").className = "blur" + this.b;
+      }
+      if (this.puntaje > 50) {
+        this.puntaje -= 10;
+      }
     },
     intento() {
-      this.intentos++;
+      if (this.intentos < 2) {
+        this.intentos++;
+      }
     },
     aumentar() {
       this.tiempo++;
@@ -235,40 +237,46 @@ export default {
 };
 </script>
 <style>
-.blur {
+.blur6 {
+  filter: blur(30px);
+  -webkit-filter: blur(30px);
+  -moz-filter: blur(30px);
+  -o-filter: blur(30px);
+  -ms-filter: blur(30px);
+}
+.blur5 {
+  filter: blur(25px);
+  -webkit-filter: blur(25px);
+  -moz-filter: blur(25px);
+  -o-filter: blur(25px);
+  -ms-filter: blur(25px);
+}
+.blur4 {
   filter: blur(20px);
   -webkit-filter: blur(20px);
   -moz-filter: blur(20px);
   -o-filter: blur(20px);
   -ms-filter: blur(20px);
 }
-.blur4 {
+.blur3 {
   filter: blur(15px);
   -webkit-filter: blur(15px);
   -moz-filter: blur(15px);
   -o-filter: blur(15px);
   -ms-filter: blur(15px);
 }
-.blur3 {
+.blur2 {
   filter: blur(10);
-  -webkit-filter: blur(20px);
+  -webkit-filter: blur(10px);
   -moz-filter: blur(10);
   -o-filter: blur(10);
   -ms-filter: blur(10);
 }
-.blur2 {
-  filter: blur(5px);
-  -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-}
 .blur1 {
-  filter: blur(1px);
-  -webkit-filter: blur(1px);
-  -moz-filter: blur(1px);
-  -o-filter: blur(1px);
-  -ms-filter: blur(1px);
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+  -moz-filter: blur(0px);
+  -o-filter: blur(0px);
+  -ms-filter: blur(0px);
 }
-
 </style>
