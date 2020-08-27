@@ -39,12 +39,6 @@
                 </div>
                 <div>
                   TIEMPO
-                  <v-btn color="orange" @click="start">
-                    Iniciar tiempo
-                  </v-btn>
-                  <v-btn color="orange" @click="stop">
-                    detener tiempo
-                  </v-btn>
                 </div>
               </v-col>
             </v-row>
@@ -61,13 +55,15 @@
                     src="https://t1.ea.ltmcdn.com/es/images/7/0/0/buhos_24007_1_600.jpg"
                   >
                   </v-img>
-                  <v-card-text class="text--primary">
-                    <div>Tu respuesta:</div>
-                    <v-text-field :rules="rules"></v-text-field>
+                  <v-card-text>
+                    <div>Respuesta:</div>
+                    <v-text-field
+                      :rules="rules"
+                      placeholder="Escribe aquí tu respuesta"
+                    ></v-text-field>
                   </v-card-text>
-
                   <v-card-actions>
-                    <v-btn v-on:click="intento" color="orange" text>
+                    <v-btn v-on:click="intento" color="orange" type="submit">
                       Comprobar
                     </v-btn>
                   </v-card-actions>
@@ -79,7 +75,7 @@
               <v-sheet class="mx-auto" elevation="3" width="650">
                 <v-row align="center" justify="center">
                   <div>
-                    <v-btn color="orange" type="submit">
+                    <v-btn color="orange">
                       Pedir pista
                     </v-btn>
                   </div>
@@ -94,7 +90,7 @@
                     :center-active="centerActive"
                   >
                     <v-slide-item
-                      v-for="(item, n) in items"
+                      v-for="(item, n) in pistas"
                       :key="n"
                       v-slot:default="{ active, toggle }"
                     >
@@ -174,6 +170,7 @@
 export default {
   data: () => ({
     b: 6,
+    respuesta: "buho",
     //item: 1,
     rules: [
       /*
@@ -194,7 +191,7 @@ export default {
     //
     puntaje: 100,
     intentos: 0,
-    items: [
+    pistas: [
       {
         pista: "Tiene ojos muy grandes",
       },
@@ -212,21 +209,21 @@ export default {
       },
     ],
     //
-    //pantalla: document.getElementById("screen"),
     isMarch: false,
     acumularTime: 0,
     crono: "00 : 00",
-
     timeInicial: 0,
     control: 0,
     timeActual: 0,
     acumularTime2: 0,
-
     cc: 0,
     ss: 0,
     mm: 0,
     hh: 0,
   }),
+  mounted() {
+    this.start();
+  },
   methods: {
     verPista() {
       if (this.b > 1) {
@@ -241,9 +238,11 @@ export default {
       if (this.intentos < 2) {
         this.intentos++;
       }
+      if (this.intentos == 2) {
+        this.stop();
+      }
     },
     //
-
     start() {
       if (this.isMarch == false) {
         this.timeInicial = new Date();
